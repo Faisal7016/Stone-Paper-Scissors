@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Cricket Game</title>
+    <style>
+      
+      .div1 
+      {
+          display: flex;
+          flex-wrap: wrap;
+          justify-content: center;
+          text-transform: capitalize;
+          height: 80%;
+          font-weight: 900;
+          font-size: 100px;
+          margin-top: 8%;
+          color:rgb(8, 1, 1);
+          -webkit-text-stroke: 2px red;
+      }
+      #button2 
+      {
+          background-image: url(stone.jpeg);
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin: 20px ;
+          height: 100px;
+          width: 100px;
+          border: none;
+          cursor: pointer;
+      }
+      #button1
+      {
+
+          background-image: url(paper.jpeg);
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin: 20px ;
+          height: 100px;
+          width: 100px;
+          border: none;
+          cursor: pointer;
+          
+
+      }
+      #button
+      {
+
+          background-image: url(scissors.jpeg);
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin: 20px ;
+          height: 100px;
+          width: 100px;
+          border: none;
+          cursor: pointer;
+      }
+      #button3
+      {
+          background-image: url(refresh.jpeg);
+          background-size: cover;
+          background-repeat: no-repeat;
+          margin: 20px ;
+          height: 100px;
+          width: 100px;
+          border: none;
+          cursor: pointer;
+      }
+
+      .button-conatainer
+      {
+          display: flex;
+          flex-wrap: wrap;
+          margin-top: 50px;
+          justify-content: center;
+          
+      }
+      #b1
+      {
+        background-image:url(th.jpg) ;
+        background-repeat: no-repeat;
+        background-size: cover;
+      }
+     
+     
+    </style>
+  </head>
+  <body>
+  <div id="div1">
+   
+    <div class="div1">
+      Stone Paper Scissor
+    </div>
+    <div class="button-conatainer">
+      <button class="b1" id="button2" onclick="
+       let computerChoice = genrateComputerChoise();
+       console.log(computerChoice)
+       let resultMsg=getResult(`Stone`, computerChoice);
+       showResult(`Stone`, computerChoice , resultMsg);
+     
+      "></button>
+
+      <button class="b1" id="button1" onclick="
+       computerChoice = genrateComputerChoise();
+       resultMsg=getResult(`Paper`, computerChoice);
+       showResult(`Paper`, computerChoice , resultMsg);
+      
+      "></button>
+
+      <button class="b1" id="button" onclick="
+        computerChoice = genrateComputerChoise();
+        resultMsg = getResult(`Scissor`, computerChoice);
+        showResult(`Scissor`, computerChoice , resultMsg);
+      
+      "></button>
+      <button id="button3" onclick="localStorage.clear()
+        resetScore()">
+          
+      </button>
+    </div>
+  </div>
+  <center>
+  <div class="msg-container">
+      <h3 id="user-move"></h3>
+      <h3 id="computer-move"></h3>
+      <h3 id="result"></h3>
+      <h3 id="score"></h3>
+  </div>
+</center>
+  
+       <script>
+        let scoreStr = localStorage.getItem('Score');
+        let score;
+        resetScore(scoreStr);
+
+        function resetScore(scoreStr) 
+        {
+            score = scoreStr ? JSON.parse(scoreStr): 
+            {
+                win: 0,
+                lost: 0,
+                tie: 0,
+            };
+            score.displayScore = function() 
+            {
+                return `Score:Won:${score.win}, Lost:${score.lost}, Tie: ${score.tie}`;
+            };
+
+          showResult();
+            
+        }
+           
+
+            function genrateComputerChoise()
+            {
+                  let randomNumber=Math.random() * 3;
+          
+                  if (randomNumber >0 && randomNumber <=1)
+                  {
+                      return `Stone`;
+                  } 
+                  else if (randomNumber >1 && randomNumber <=2)
+                  {
+                      return `Paper`;
+                  } 
+                  else if(randomNumber >2 && randomNumber <=3)
+                  {
+                      return `Scissor`;
+                  }       
+            }
+            function getResult(userMove,computerMove)
+            {
+              
+              if (userMove === 'Stone')
+              {
+                if (computerMove === 'Scissor')
+                {
+                    score.win++;
+                    return 'User won.';
+                } 
+                else if (computerMove === 'Stone') 
+                {
+                    score.tie++;
+                    return `It's a tie`;
+                } 
+                else if (computerMove === 'Paper') 
+                {
+                  score.lost++;
+                  return 'Computer has won';
+                }
+              } 
+              else if (userMove === 'Paper') 
+              {
+                if (computerMove === 'Paper') 
+                {
+                  score.tie++;
+                  return `It's a tie`;
+                } 
+                else if (computerMove === 'Scissor') 
+                {
+                  score.lost++;
+                  return 'Computer has won';
+                } 
+                else if (computerMove === 'Stone') 
+                {
+                  score.win++;
+                  return 'User won.';
+                }
+              } 
+              else 
+              {
+                if (computerMove === 'Stone') 
+                {
+                  score.lost++;
+                  return 'Computer has won';
+                } 
+                else if (computerMove === 'Paper') 
+                {
+                  score.win++;
+                  return 'User won.';
+                } 
+                else if (computerMove === 'Scissor') 
+                {
+                  score.tie++;
+                  return `It's a tie`;
+                }
+              }
+              
+          
+            }
+            function showResult(userMove,computerMove,result)
+              {
+                localStorage.setItem('Score', JSON.stringify(score));
+      
+                document.querySelector('#user-move').innerText = 
+                  userMove ? `You have chosen ${userMove}` : '';
+                
+                document.querySelector('#computer-move').innerText =
+                  computerMove ? `Computer choice is ${computerMove}` : '';
+                
+                document.querySelector('#result').innerText = result || '';
+
+                document.querySelector('#score').innerText = score.displayScore();
+
+              }
+       </script>
+     
+  </body>
+</html>
